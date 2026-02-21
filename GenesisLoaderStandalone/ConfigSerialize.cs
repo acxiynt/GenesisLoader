@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-namespace GenesisLoader;
+namespace Genesis;
 
 public class Config
 {
