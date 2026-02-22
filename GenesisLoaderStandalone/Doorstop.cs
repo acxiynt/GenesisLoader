@@ -26,6 +26,7 @@ namespace Doorstop
                 _ = OnGameInit();
                 UnityStarted = true;
             }
+            _ = Main.OnSceneLoaded();
         }
         public static void Start()
         {
