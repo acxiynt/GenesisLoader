@@ -71,15 +71,18 @@ public static class Main
         List<Task> tasks = new List<Task>();
         foreach (string item in Directory.GetFiles(Config.GetConfig("Path", "AssemblyPath")))
         {
-            try
+            tasks.Add(Task.Run(async () =>
             {
-                assemblies.Add(Path.GetFileNameWithoutExtension(item), Assembly.LoadFrom(item));
-                Util.LogString($"{Path.GetFileNameWithoutExtension(item)} loaded.");
-            }
-            catch (Exception e)
-            {
-                Util.LogString($"Preinitialization failed, error: {e}", InfoType.Error);
-            }
+                try
+                {
+                    assemblies.Add(Path.GetFileNameWithoutExtension(item), Assembly.LoadFrom(item));
+                    Util.LogString($"{Path.GetFileNameWithoutExtension(item)} loaded.");
+                }
+                catch (Exception e)
+                {
+                    Util.LogString($"Preinitialization failed, error: {e}", InfoType.Error);
+                }
+            }));
         }
         await Task.WhenAll(tasks);
     }
@@ -89,9 +92,9 @@ public static class Main
         List<Task> tasks = new List<Task>();
         foreach (string item in Directory.GetDirectories(Config.GetConfig("Path", "ModPath")))
         {
-            try
+            tasks.Add(Task.Run(async () =>
             {
-                tasks.Add(Task.Run(async () =>
+                try
                 {
                     if (Directory.Exists($"{item}/Assemblies"))
                         foreach (string subitem in Directory.GetFiles($"{item}/Assemblies", "*.dll", SearchOption.AllDirectories))
@@ -99,12 +102,12 @@ public static class Main
                             modAssemblies.Add(Path.GetFileNameWithoutExtension(subitem), Assembly.LoadFrom(subitem));
                             Util.LogString($"{Path.GetFileNameWithoutExtension(subitem)} loaded.");
                         }
-                }));
-            }
-            catch (Exception e)
-            {
-                Util.LogString($"Modloading failed, error: {e}", InfoType.Error);
-            }
+                }
+                catch (Exception e)
+                {
+                    Util.LogString($"Modloading failed, error: {e}", InfoType.Error);
+                }
+            }));
         }
         await Task.WhenAll(tasks);
     }
