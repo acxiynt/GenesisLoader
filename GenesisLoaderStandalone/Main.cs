@@ -1,8 +1,5 @@
-using System.Reflection;
 using System.IO;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 namespace Genesis;
 
@@ -21,6 +18,7 @@ public static class Constant
 }
 public class Util
 {
+    static readonly object _lock = new object();
     static readonly StreamWriter filePtr;
     static Util()
     {
@@ -35,8 +33,11 @@ public class Util
     /// <param name="info">Info type of the log, default is InfoType.info.</param>
     internal static void LogString(string text, InfoType info = InfoType.Info)
     {
-        filePtr.WriteLine($"[{info}][GenesisLoader] {DateTime.Now:yyyy-MM-dd HH-mm-ss}: {text}");
-        filePtr.Flush();
+        lock (_lock)
+        {
+            filePtr.WriteLine($"[{info}][GenesisLoader] {DateTime.Now:yyyy-MM-dd HH-mm-ss}: {text}");
+            filePtr.Flush();
+        }
     }
     /// <summary>
     /// Logs string into Logs.txt, logs as info type.
@@ -46,15 +47,21 @@ public class Util
     /// <param name="info">Info type of the log, default is InfoType.info.</param>
     public static void LogString(string modName, string text, InfoType info = InfoType.Info)
     {
-        filePtr.WriteLine($"[{info}][{modName}] {DateTime.Now:yyyy-MM-dd HH-mm-ss}: {text}");
-        filePtr.Flush();
+        lock (_lock)
+        {
+            filePtr.WriteLine($"[{info}][{modName}] {DateTime.Now:yyyy-MM-dd HH-mm-ss}: {text}");
+            filePtr.Flush();
+        }
     }
 
     internal static void LogUnity(string logString, string stackTrace, LogType type)
     {
-        filePtr.WriteLine($"[{type}][Unity] {DateTime.Now:yyyy-MM-dd HH-mm-ss}: {logString}");
-        if ((type == LogType.Error || type == LogType.Exception) && !string.IsNullOrWhiteSpace(stackTrace))
-            filePtr.WriteLine($"Error stacktrace: {stackTrace}");
-        filePtr.Flush();
+        lock (_lock)
+        {
+            filePtr.WriteLine($"[{type}][Unity] {DateTime.Now:yyyy-MM-dd HH-mm-ss}: {logString}");
+            if ((type == LogType.Error || type == LogType.Exception) && !string.IsNullOrWhiteSpace(stackTrace))
+                filePtr.WriteLine($"Error stacktrace: {stackTrace}");
+            filePtr.Flush();
+        }
     }
 }
