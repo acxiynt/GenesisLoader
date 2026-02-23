@@ -11,6 +11,7 @@ public static class Main
     private static Dictionary<string, Assembly> modAssemblies = new Dictionary<string, Assembly>();
     public static Dictionary<string, Assembly> Assemblies => assemblies;
     public static Dictionary<string, Assembly> ModAssemblies => modAssemblies;
+    private static readonly object _lock = new object();
 
     private readonly static Func<Dictionary<string, Assembly>, Action<IPluginBase>, Task> CallPlugin = async (assemblies, method) =>
     {
@@ -69,13 +70,15 @@ public static class Main
     public static async Task PreInit()
     {
         List<Task> tasks = new List<Task>();
-        foreach (string item in Directory.GetFiles(Config.GetConfig("Path", "AssemblyPath")))
+        foreach (string file in Directory.GetFiles(Config.GetConfig("Path", "AssemblyPath")))
         {
+            string item = file;
             tasks.Add(Task.Run(async () =>
             {
                 try
                 {
-                    assemblies.Add(Path.GetFileNameWithoutExtension(item), Assembly.LoadFrom(item));
+                    lock (_lock)
+                        assemblies.Add(Path.GetFileNameWithoutExtension(item), Assembly.LoadFrom(item));
                     Util.LogString($"{Path.GetFileNameWithoutExtension(item)} loaded.");
                 }
                 catch (Exception e)
@@ -99,7 +102,8 @@ public static class Main
                     if (Directory.Exists($"{item}/Assemblies"))
                         foreach (string subitem in Directory.GetFiles($"{item}/Assemblies", "*.dll", SearchOption.AllDirectories))
                         {
-                            modAssemblies.Add(Path.GetFileNameWithoutExtension(subitem), Assembly.LoadFrom(subitem));
+                            lock (_lock)
+                                modAssemblies.Add(Path.GetFileNameWithoutExtension(subitem), Assembly.LoadFrom(subitem));
                             Util.LogString($"{Path.GetFileNameWithoutExtension(subitem)} loaded.");
                         }
                 }

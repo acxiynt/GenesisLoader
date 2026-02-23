@@ -32,17 +32,18 @@ public class Util
     /// Logs string into Logs.txt, for core component only.
     /// </summary>
     /// <param name="text">The text string you want to log.</param>
-    /// <param name="info">Info level of the log, default is InfoType.info.</param>
+    /// <param name="info">Info type of the log, default is InfoType.info.</param>
     internal static void LogString(string text, InfoType info = InfoType.Info)
     {
         filePtr.WriteLine($"[{info}][GenesisLoader] {DateTime.Now:yyyy-MM-dd HH-mm-ss}: {text}");
         filePtr.Flush();
     }
     /// <summary>
-    /// Logs string into Logs.txt, logs as info level.
+    /// Logs string into Logs.txt, logs as info type.
     /// </summary>
     /// <param name="modName">The name of the mod.</param>
     /// <param name="text">The text string you want to log.</param>
+    /// <param name="info">Info type of the log, default is InfoType.info.</param>
     public static void LogString(string modName, string text, InfoType info = InfoType.Info)
     {
         filePtr.WriteLine($"[{info}][{modName}] {DateTime.Now:yyyy-MM-dd HH-mm-ss}: {text}");
