@@ -67,7 +67,7 @@ public static class Main
         await Task.WhenAll(tasks);
     };
     //start of the chainload
-    public static async Task PreInit()
+    internal static async Task PreInit()
     {
         List<Task> tasks = new List<Task>();
         foreach (string file in Directory.GetFiles(Config.GetConfig("Path", "AssemblyPath")))
@@ -90,7 +90,7 @@ public static class Main
         await Task.WhenAll(tasks);
     }
 
-    public static async Task LoadMod()
+    internal static async Task LoadMod()
     {
         List<Task> tasks = new List<Task>();
         foreach (string item in Directory.GetDirectories(Config.GetConfig("Path", "ModPath")))
@@ -116,11 +116,11 @@ public static class Main
         await Task.WhenAll(tasks);
     }
     //to init plugin, this is earlier than init mods
-    public static async Task Init() => await CallPlugin(assemblies, plugin => plugin.Init());
+    internal static async Task Init() => await CallPlugin(assemblies, plugin => plugin.Init());
     //way later than Init()
-    public static async Task OnGameInit() => await CallPlugin(assemblies, plugin => plugin.OnGameInit());
-    public static async Task InitMod() => await CallMod(modAssemblies, mod => mod.Init());
-    public static async Task OnSceneLoaded()
+    internal static async Task OnGameInit() => await CallPlugin(assemblies, plugin => plugin.OnGameInit());
+    internal static async Task InitMod() => await CallMod(modAssemblies, mod => mod.Init());
+    internal static async Task OnSceneLoaded()
     {
         List<Task> tasks =
         [
