@@ -93,7 +93,7 @@ public class Config
     /// <returns>The config value, in string, will never be null, if fails, returns string.Empty()</returns>
     public static string GetConfig(string header, string entry) => Dict[header][entry];
     /// <summary>
-    /// Queries the dictionary to return a enumerable string object from selected header.
+    /// Queries the dictionary to return a enumerable string object of each entries from selected header.
     /// </summary>
     /// <param name="header">The header of configs needed</param>
     /// <returns>The config value, in enumerable string object, if fails, returns empty enumberable string object.</returns>
