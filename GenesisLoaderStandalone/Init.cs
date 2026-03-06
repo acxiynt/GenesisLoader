@@ -13,6 +13,17 @@ public static class Main
     public static Dictionary<string, Assembly> ModAssemblies => modAssemblies;
     private static readonly object _lock = new object();
 
+    internal static void EnsureDirectory()
+    {
+
+        foreach (string path in Config.GetConfig("Path"))
+        {
+            if (File.Exists(path))
+                continue;
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+        }
+    }
     private readonly static Func<Dictionary<string, Assembly>, Action<IPluginBase>, Task> CallPlugin = async (assemblies, method) =>
     {
         List<Task> tasks = new List<Task>();
@@ -70,7 +81,7 @@ public static class Main
     internal static async Task PreInit()
     {
         List<Task> tasks = new List<Task>();
-        foreach (string file in Directory.GetFiles(Config.GetConfig("Path", "AssemblyPath")))
+        foreach (string file in Directory.GetFiles(Constant.AssemblyPath))
         {
             string item = file;
             tasks.Add(Task.Run(async () =>
@@ -93,7 +104,7 @@ public static class Main
     internal static async Task LoadMod()
     {
         List<Task> tasks = new List<Task>();
-        foreach (string item in Directory.GetDirectories(Config.GetConfig("Path", "ModPath")))
+        foreach (string item in Directory.GetDirectories(Constant.ModPath))
         {
             tasks.Add(Task.Run(async () =>
             {

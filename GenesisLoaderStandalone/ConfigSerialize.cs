@@ -92,6 +92,12 @@ public class Config
     /// <param name="entry">The name of config value needed</param>
     /// <returns>The config value, in string, will never be null, if fails, returns string.Empty()</returns>
     public static string GetConfig(string header, string entry) => Dict[header][entry];
+    /// <summary>
+    /// Queries the dictionary to return a enumerable string object from selected header.
+    /// </summary>
+    /// <param name="header">The header of configs needed</param>
+    /// <returns>The config value, in enumerable string object, if fails, returns empty enumberable string object.</returns>
+    public static IEnumerable<string> GetConfig(string header) => Dict[header].Values;
 }
 public struct UnserializedConfig
 {

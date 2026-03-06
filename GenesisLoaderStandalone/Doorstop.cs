@@ -30,6 +30,7 @@ namespace Doorstop
         }
         public static void Start()
         {
+            Main.EnsureDirectory();
             SceneManager.sceneLoaded += OnSceneLoaded;
             Config.ReadFile("./GenesisLoader.cfg");
             Util.LogString("Preinitalization started.");

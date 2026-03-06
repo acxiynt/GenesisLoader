@@ -22,7 +22,7 @@ public class Util
     static readonly StreamWriter filePtr;
     static Util()
     {
-        filePtr = new StreamWriter(new FileStream(Config.GetConfig("Path", "LogPath"), FileMode.Create));
+        filePtr = new StreamWriter(new FileStream(Constant.LogPath, FileMode.Create));
     }
 
     //for core component only
