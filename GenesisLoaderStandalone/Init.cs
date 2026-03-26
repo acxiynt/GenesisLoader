@@ -18,10 +18,9 @@ public static class Main
 
         foreach (string path in Config.GetConfig("Path"))
         {
-            if (File.Exists(path))
+            if (Directory.Exists(path) || path.Contains('.'))
                 continue;
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            Directory.CreateDirectory(path);
         }
     }
     private readonly static Func<Dictionary<string, Assembly>, Action<IPluginBase>, Task> CallPlugin = async (assemblies, method) =>
