@@ -18,7 +18,7 @@ public static class Main
 
         foreach (string path in Config.GetConfig("Path"))
         {
-            if (Directory.Exists(path) || path.Contains('.'))
+            if (Directory.Exists(path) || !string.IsNullOrEmpty(Path.GetExtension(path)))
                 continue;
             Directory.CreateDirectory(path);
         }
